@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import jwt
-from jwt import PyJWKClient
 from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
 
 app = FastAPI()
@@ -48,7 +48,13 @@ def verify_token(req: TokenRequest):
         }
 
     except ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail={"valid": False})
+        return JSONResponse(
+            status_code=401,
+            content={"valid": False}
+        )
 
     except InvalidTokenError:
-        raise HTTPException(status_code=401, detail={"valid": False})
+        return JSONResponse(
+            status_code=401,
+            content={"valid": False}
+        )
